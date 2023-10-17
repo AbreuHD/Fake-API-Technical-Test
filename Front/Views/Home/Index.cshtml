@@ -1,8 +1,142 @@
-﻿@{
+﻿@using Core.Application.DTOs
+@{
     ViewData["Title"] = "Home Page";
 }
+@model List<InfoBookDTO>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="row row-cols-4">
+
+        @if(Model == null || Model.Count == 0){
+            <h1>No Existen post aun</h1>
+        }
+        else
+        {
+            <div class="input-group mb-3">
+
+                <input type="number" class="form-control" id="bookId" aria-label="Text input with dropdown button">
+                <button class="btn btn-outline-secondary" type="button" id="searchButton">Buscar ID</button>
+                <div class="text-en ps-2">
+                    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addModal">Agregar Libro</button>
+                </div>
+            </div>
+
+            @foreach (InfoBookDTO books in Model)
+            {
+
+                <div class="col p-2">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://static.vecteezy.com/system/resources/previews/002/219/582/non_2x/illustration-of-book-icon-free-vector.jpg" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@books.Title</h5>
+                            <p class="card-text">@books.Description</p>
+                            <a asp-asp-controller="Home" asp-action="Info" asp-route-Id="@books.Id" class="btn btn-primary">Info</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addModalLabel">Añadir libro</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="@Url.Action("Update", "Home")">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titulo</label>
+                            <input type="text" class="form-control" id="title" name="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <textarea class="form-control" id="descripcion" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="extracto" class="form-label">Extracto del libro</label>
+                            <textarea class="form-control" id="extracto" name="excerpt" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paginas" class="form-label">Cantidad de paginas</label>
+                            <input type="number" class="form-control" name="pageCount" id="paginas">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha de creacion</label>
+                            <input type="date" class="form-control" name="publishDate" id="fecha">
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-warning">Añadir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.errors != null && ViewBag.errors.Length > 0)
+    {
+        <div class="toast-container position-static">
+            @foreach (var error in ViewBag.errors)
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <img src="https://img.freepik.com/vector-premium/signo-pintado-pincel-ilustracion-estilo-dibujado-mano-efecto-grunge-signo_546559-113.jpg" class="rounded me-2" width="20" height="20" alt="...">
+                            <strong class="me-auto">Error</strong>
+                            <small>Ahora Mismo</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            @error
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (ViewBag.status != null)
+    {
+        <div class="toast-container position-static">
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <img src="https://img.freepik.com/vector-premium/signo-pintado-pincel-ilustracion-estilo-dibujado-mano-efecto-grunge-signo_546559-113.jpg" class="rounded me-2" width="20" height="20" alt="...">
+                            <strong class="me-auto">Error</strong>
+                            <small>Ahora Mismo</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Eliminado con exito
+                        </div>
+                    </div>
+                </div>
+        </div>
+    }
+
+    <script>
+        window.onload = (event) => {
+            let myAlert = document.querySelectorAll('.toast');
+            myAlert.forEach((toast, index) => {
+                let bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchButton = document.getElementById("searchButton");
+            searchButton.addEventListener("click", function () {
+                var bookId = document.getElementById("bookId").value;
+                if (bookId) {
+                    window.location.href = '/Home/Info?Id=' + bookId;
+                }
+            });
+        });
+
+    </script>
+
+
 </div>
+
