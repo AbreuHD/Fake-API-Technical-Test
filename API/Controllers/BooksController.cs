@@ -1,15 +1,15 @@
 ﻿using API.Controllers.General;
 using Core.Application.DTOs;
-using Core.Application.Services.API;
+using Core.Application.Services.FakeAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     public class BooksController : GeneralApiControllerBase
     {
-        public readonly APIService _apiService;
+        public readonly FakeAPIService _apiService;
 
-        public BooksController(APIService apiService)
+        public BooksController(FakeAPIService apiService)
         {
             _apiService = apiService;
         }

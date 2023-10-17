@@ -1,19 +1,16 @@
 ﻿using Core.Application.DTOs;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Json;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Application.Services.API
 {
-    public class APIService
+    public class APICallService
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public APIService(IHttpClientFactory httpClientFactory)
+        public APICallService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
@@ -21,11 +18,11 @@ namespace Core.Application.Services.API
         public async Task<GenericApiResponse<List<InfoBookDTO>>> GetBooks()
         {
             var client = _httpClientFactory.CreateClient("BackEnd");
-            var call = await client.GetAsync("/api/v1/Bookss");
-            var response = await HttpMessages<List<InfoBookDTO>>(call);
-
+            var call = await client.GetAsync("/api/Books");
             var jsonContent = await call.Content.ReadAsStringAsync();
-            List<InfoBookDTO> booksList = JsonConvert.DeserializeObject<List<InfoBookDTO>>(jsonContent);
+            JObject jsonObject = JObject.Parse(jsonContent);
+            List<InfoBookDTO> booksList = JsonConvert.DeserializeObject<List<InfoBookDTO>>(jsonObject["data"].ToString());
+            var response = await HttpMessages<List<InfoBookDTO>>(call);
             response.Data = booksList;
             return response;
         }
@@ -33,11 +30,12 @@ namespace Core.Application.Services.API
         public async Task<GenericApiResponse<InfoBookDTO>> GetBookById(int Id)
         {
             var client = _httpClientFactory.CreateClient("BackEnd");
-            var call = await client.GetAsync($"/api/v1/Books/{Id}");
+            var call = await client.GetAsync($"/api/Books/{Id}");
             var response = await HttpMessages<InfoBookDTO>(call);
 
             var jsonContent = await call.Content.ReadAsStringAsync();
-            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonContent);
+            JObject jsonObject = JObject.Parse(jsonContent);
+            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonObject["data"].ToString());
             response.Data = book;
             return response;
         }
@@ -47,11 +45,12 @@ namespace Core.Application.Services.API
             var client = _httpClientFactory.CreateClient("BackEnd");
             var bookJson = JsonConvert.SerializeObject(request);
             var content = new StringContent(bookJson, Encoding.UTF8, "application/json");
-            var call = await client.PostAsync("/api/v1/Books", content);
+            var call = await client.PostAsync("/api/Books", content);
             var response = await HttpMessages<InfoBookDTO>(call);
 
             var jsonContent = await call.Content.ReadAsStringAsync();
-            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonContent);
+            JObject jsonObject = JObject.Parse(jsonContent);
+            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonObject["data"].ToString());
             response.Data = book;
             return response;
         }
@@ -61,20 +60,22 @@ namespace Core.Application.Services.API
             var client = _httpClientFactory.CreateClient("BackEnd");
             var bookJson = JsonConvert.SerializeObject(request);
             var content = new StringContent(bookJson, Encoding.UTF8, "application/json");
-            var call = await client.PutAsync($"/api/v1/Books/{Id}", content);
+            var call = await client.PutAsync($"/api/Books/{Id}", content);
             var response = await HttpMessages<InfoBookDTO>(call);
 
             var jsonContent = await call.Content.ReadAsStringAsync();
-            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonContent);
+            JObject jsonObject = JObject.Parse(jsonContent);
+            InfoBookDTO book = JsonConvert.DeserializeObject<InfoBookDTO>(jsonObject["data"].ToString());
             response.Data = book;
             return response;
         }
 
-        public async Task<System.Net.HttpStatusCode> DeleteBook(int Id)
+        public async Task<GenericApiResponse<int>> DeleteBook(int Id)
         {
             var client = _httpClientFactory.CreateClient("BackEnd");
-            var response = await client.DeleteAsync($"/api/v1/Books/{Id}");
-            return response.StatusCode;
+            var call = await client.DeleteAsync($"/api/Books/{Id}");
+            var response = await HttpMessages<int>(call);
+            return response;
         }
 
 
@@ -86,6 +87,5 @@ namespace Core.Application.Services.API
             response.Data = new T();
             return response;
         }
-
     }
 }

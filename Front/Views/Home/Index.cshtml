@@ -1,8 +1,40 @@
-﻿@{
+﻿@using Core.Application.DTOs
+@{
     ViewData["Title"] = "Home Page";
 }
+@model List<InfoBookDTO>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container text-center">
+    <div class="row row-cols-4">
+        @if(Model == null || Model.Count == 0){
+            <h1>No Existen post aun</h1>
+        }
+        else
+        {
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Buscar Por</button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Nombre</a></li>
+                    <li><a class="dropdown-item" href="#">Id</a></li>
+                </ul>
+            </div>
+
+            @foreach (InfoBookDTO books in Model)
+            {
+
+                <div class="col p-2">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://static.vecteezy.com/system/resources/previews/002/219/582/non_2x/illustration-of-book-icon-free-vector.jpg" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@books.Title</h5>
+                            <p class="card-text">@books.Description</p>
+                            <a asp-asp-controller="Home" asp-action="Info" asp-route-Id="@books.Id" class="btn btn-primary">Info</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
+
