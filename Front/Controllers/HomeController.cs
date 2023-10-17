@@ -19,6 +19,7 @@ namespace Front.Controllers
         {
             var response = await _apiCallService.GetBooks();
             ViewBag.status = TempData["status"];
+            ViewBag.errors = TempData["errors"];
             return View(response.Data);
         }
 
@@ -42,12 +43,38 @@ namespace Front.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(BookDTO request, int Id)
         {
+            if (!ModelState.IsValid)
+            {
+                List<string> errores = new List<string>();
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        errores.Add(error.ErrorMessage);
+                    }
+                }
+                TempData["errors"] = errores;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
             var response = await _apiCallService.UpdateBook(Id, request);
             return View(response.Data);
         }
 
         public async Task<IActionResult> Add(BookDTO request, int Id)
         {
+            if (!ModelState.IsValid)
+            {
+                List<string> errores = new List<string>();
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        errores.Add(error.ErrorMessage);
+                    }
+                }
+                TempData["errors"] = errores;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
             var response = await _apiCallService.AddBook(request);
             return View(response.Data);
         }

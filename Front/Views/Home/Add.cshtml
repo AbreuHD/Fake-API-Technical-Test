@@ -1,0 +1,88 @@
+﻿@using Core.Application.DTOs
+@{
+    ViewData["Title"] = "Agregado";
+}
+@model InfoBookDTO
+
+<div class="container">
+    <div class="card mb-4" style="max-width: 100%;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://static.vecteezy.com/system/resources/previews/002/219/582/non_2x/illustration-of-book-icon-free-vector.jpg" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h1 class="card-title text-center">@Model.Title</h1>
+                    <h5>Descripcion:</h5>
+                    <p class="card-text">@Model.Description</p>
+                    <h5>Extracto del libro:</h5>
+                    <p class="card-text">@Model.Excerpt</p>
+                    <p class="card-text text-end"><small class="text-body-secondary">@Model.PageCount Paginas</small></p>
+                    <p class="card-text text-end"><small class="text-body-secondary">Fecha de Publicacion: @Model.PublishDate</small></p>
+                    <div class="btn-group d-flex justify-content-evenly" role="group" aria-label="Basic mixed styles example">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal">Editar</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editModalLabel">Editar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="@Url.Action("Update", "Home")">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titulo</label>
+                            <input type="text" class="form-control" id="title" name="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <textarea class="form-control" id="descripcion" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="extracto" class="form-label">Extracto del libro</label>
+                            <textarea class="form-control" id="extracto" name="excerpt" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paginas" class="form-label">Cantidad de paginas</label>
+                            <input type="number" class="form-control" name="pageCount" id="paginas">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha de creacion</label>
+                            <input type="date" class="form-control" name="publishDate" id="fecha">
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-warning">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Eliminar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Seguro que quieres eliminarlo?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a type="button" asp-controller="Home" asp-action="Delete" asp-route-Id="@Model.Id" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

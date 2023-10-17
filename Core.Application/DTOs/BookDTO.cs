@@ -9,17 +9,17 @@ namespace Core.Application.DTOs
 {
     public class BookDTO
     {
-        [Required(ErrorMessage = "Title is required")]
+        [Required(ErrorMessage = "Titulo es requerido")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Description is required")]
+        [Required(ErrorMessage = "Descripcion es requerido")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "PageCount is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "PageCount must be a positive number.")]
+        [Required(ErrorMessage = "La cantidad de paginas son requeridas")]
+        [Range(1, int.MaxValue, ErrorMessage = "Las paginas deben ser un numero positivo.")]
         public int? PageCount { get; set; }
 
-        [Required(ErrorMessage = "Excerpt is required")]
+        [Required(ErrorMessage = "El extracto del libro es requerido")]
         public string Excerpt { get; set; }
 
         public DateTime PublishDate { get; set; }
