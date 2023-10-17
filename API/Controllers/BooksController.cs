@@ -29,12 +29,20 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBook(BookDTO request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return Ok(await _apiService.AddBook(request));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBook(int id, BookDTO request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return Ok(await _apiService.UpdateBook(id, request));
         }
 
