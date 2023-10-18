@@ -18,6 +18,10 @@ namespace Front.Controllers
         public async Task<IActionResult> Index()
         {
             var response = await _apiCallService.GetBooks();
+            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                ViewBag.errors = response.StatusCode.ToString();
+            }
             ViewBag.status = TempData["status"];
             ViewBag.errors = TempData["errors"];
             return View(response.Data);
@@ -26,6 +30,13 @@ namespace Front.Controllers
         public async Task<IActionResult> Info(int Id)
         {
             var response = await _apiCallService.GetBookById(Id);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                List<string> errores = new List<string>();
+                errores.Add(response.StatusCode.ToString());
+                TempData["errors"] = errores;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
             return View(response.Data);
         }
 
@@ -35,6 +46,13 @@ namespace Front.Controllers
             if (((int)response.StatusCode) == 200)
             {
                 TempData["status"] = 3;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                List<string> errores = new List<string>();
+                errores.Add(response.StatusCode.ToString());
+                TempData["errors"] = errores;
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
             return View(response);
@@ -57,6 +75,14 @@ namespace Front.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
             var response = await _apiCallService.UpdateBook(Id, request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                List<string> errores = new List<string>();
+                errores.Add(response.StatusCode.ToString());
+                TempData["errors"] = errores;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
             return View(response.Data);
         }
 
@@ -76,6 +102,14 @@ namespace Front.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
             var response = await _apiCallService.AddBook(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                List<string> errores = new List<string>();
+                errores.Add(response.StatusCode.ToString());
+                TempData["errors"] = errores;
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
             return View(response.Data);
         }
 

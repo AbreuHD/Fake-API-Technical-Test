@@ -40,24 +40,25 @@
                     <form method="post" action="@Url.Action("Update", "Home")">
                         <div class="mb-3">
                             <label for="title" class="form-label">Titulo</label>
-                            <input type="text" class="form-control" id="title" name="title">
+                            <input type="text" class="form-control" id="title" name="title" value="@Model.Title">
                         </div>
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripcion</label>
-                            <textarea class="form-control" id="descripcion" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="descripcion" name="description" rows="3">@Model.Description</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="extracto" class="form-label">Extracto del libro</label>
-                            <textarea class="form-control" id="extracto" name="excerpt" rows="3"></textarea>
+                            <textarea class="form-control" id="extracto" name="excerpt" rows="3">@Model.Excerpt</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="paginas" class="form-label">Cantidad de paginas</label>
-                            <input type="number" class="form-control" name="pageCount" id="paginas">
+                            <input type="number" class="form-control" name="pageCount" value="@Model.PageCount" id="paginas">
                         </div>
                         <div class="mb-3">
-                            <label for="fecha" class="form-label">Fecha de creacion</label>
-                            <input type="date" class="form-control" name="publishDate" id="fecha">
+                            <label for="fecha" class="form-label">Fecha de creación</label>
+                            <input type="date" class="form-control" name="publishDate" value="@Model.PublishDate.ToString("yyyy-MM-dd")" id="fecha">
                         </div>
+
                         <div class="text-end">
                             <button type="submit" class="btn btn-warning">Actualizar</button>
                         </div>

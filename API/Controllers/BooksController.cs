@@ -2,6 +2,7 @@
 using Core.Application.DTOs;
 using Core.Application.Services.FakeAPI;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -17,13 +18,15 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBooks()
         {
-            return Ok(await _apiService.GetBooks());
+            var bookResponse = await _apiService.GetBooks();
+            return StatusCode((int)bookResponse.StatusCode, bookResponse);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookById(int id)
         {
-            return Ok(await _apiService.GetBookById(id));
+            var bookResponse = await _apiService.GetBookById(id);
+            return StatusCode((int)bookResponse.StatusCode, bookResponse);
         }
 
         [HttpPost]
@@ -33,7 +36,8 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _apiService.AddBook(request));
+            var bookResponse = await _apiService.AddBook(request);
+            return StatusCode((int)bookResponse.StatusCode, bookResponse);
         }
 
         [HttpPut("{id}")]
@@ -43,14 +47,15 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _apiService.UpdateBook(id, request));
+            var bookResponse = await _apiService.UpdateBook(id, request);
+            return StatusCode((int)bookResponse.StatusCode, bookResponse);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            return Ok(await _apiService.DeleteBook(id));
+            var bookResponse = await _apiService.DeleteBook(id);
+            return StatusCode((int)bookResponse.StatusCode, bookResponse);
         }
-
     }
 }
